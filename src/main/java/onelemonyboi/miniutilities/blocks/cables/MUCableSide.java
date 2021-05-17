@@ -23,11 +23,12 @@ public enum MUCableSide implements IStringSerializable {
     }
 
     public boolean isConnected() {
-        return this == PUSH || this == PULL;
+        return !this.isDisconnected();
     }
     public boolean isDisconnected() {
         return this == DISABLED || this == NONE;
     }
+
     public boolean isDisabled() {
         return this == DISABLED;
     }

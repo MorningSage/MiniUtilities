@@ -1,5 +1,7 @@
 package onelemonyboi.miniutilities.blocks.cables.energy;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -37,10 +39,20 @@ public class EnergyTile extends EnergyTileBase {
 
     public void powerLogic(EnumProperty<MUCableSide> prop, Direction d) {
         if (getBlockState().get(prop) == MUCableSide.PULL) {
-            energy.outputToSide(world, pos, d, 8192);
-        }
-        else if (getBlockState().get(prop) == MUCableSide.PUSH) {
             energy.inputFromSide(world, pos, d, 8192);
         }
+        else if (getBlockState().get(prop) == MUCableSide.PUSH) {
+            energy.outputToSide(world, pos, d, 8192);
+        }
+    }
+
+    public CompoundNBT write(CompoundNBT nbt) {
+        this.energy.write(nbt);
+        return super.write(nbt);
+    }
+
+    public void read(BlockState state, CompoundNBT nbt) {
+        this.energy.read(nbt);
+        super.read(state, nbt);
     }
 }
