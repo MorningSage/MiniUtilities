@@ -6,12 +6,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.RedstoneSide;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -44,7 +40,7 @@ public class EnergyBlock extends Block {
     public static final EnumProperty<MUCableSide> EAST = EnumProperty.create("east", MUCableSide.class);
     public static final EnumProperty<MUCableSide> SOUTH = EnumProperty.create("south", MUCableSide.class);
     public static final EnumProperty<MUCableSide> WEST = EnumProperty.create("west", MUCableSide.class);
-    public static Map<Direction, EnumProperty<MUCableSide>> map = new HashMap<>();
+    public static Map<Direction, EnumProperty<MUCableSide>> directionMap = new HashMap<>();
 
     public EnergyBlock(Properties properties) {
         super(properties);
@@ -55,12 +51,12 @@ public class EnergyBlock extends Block {
                 .with(EAST, NONE)
                 .with(SOUTH, NONE)
                 .with(WEST, NONE));
-        map.put(Direction.UP, UP);
-        map.put(Direction.DOWN, DOWN);
-        map.put(Direction.NORTH, NORTH);
-        map.put(Direction.EAST, EAST);
-        map.put(Direction.SOUTH, SOUTH);
-        map.put(Direction.WEST, WEST);
+        directionMap.put(Direction.UP, UP);
+        directionMap.put(Direction.DOWN, DOWN);
+        directionMap.put(Direction.NORTH, NORTH);
+        directionMap.put(Direction.EAST, EAST);
+        directionMap.put(Direction.SOUTH, SOUTH);
+        directionMap.put(Direction.WEST, WEST);
     }
 
     @Override
@@ -115,18 +111,17 @@ public class EnergyBlock extends Block {
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (worldIn.isRemote) {
-            worldIn.addParticle(ParticleTypes.SMOKE, hit.getHitVec().x, hit.getHitVec().y, hit.getHitVec().z, 0, 0, 0);
             return ActionResultType.CONSUME;
         }
 
-        System.out.println(state.get(map.get(hit.getFace())));
+        System.out.println(state.get(directionMap.get(hit.getFace())));
 
-        if (state.get(map.get(hit.getFace())) == PUSH) {
-            worldIn.setBlockState(pos, state.with(map.get(hit.getFace()), PULL));
-        } else if (state.get(map.get(hit.getFace())) == PULL) {
-            worldIn.setBlockState(pos, state.with(map.get(hit.getFace()), DISABLED));
-        } else if (state.get(map.get(hit.getFace())).isDisconnected()) {
-            worldIn.setBlockState(pos, state.with(map.get(hit.getFace()), PUSH));
+        if (state.get(directionMap.get(hit.getFace())) == PUSH) {
+            worldIn.setBlockState(pos, state.with(directionMap.get(hit.getFace()), PULL));
+        } else if (state.get(directionMap.get(hit.getFace())) == PULL) {
+            worldIn.setBlockState(pos, state.with(directionMap.get(hit.getFace()), DISABLED));
+        } else if (state.get(directionMap.get(hit.getFace())).isDisconnected()) {
+            worldIn.setBlockState(pos, state.with(directionMap.get(hit.getFace()), PUSH));
         }
         return ActionResultType.CONSUME;
     }
