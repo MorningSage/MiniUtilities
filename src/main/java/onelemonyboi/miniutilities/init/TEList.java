@@ -3,6 +3,7 @@ package onelemonyboi.miniutilities.init;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;
 import onelemonyboi.miniutilities.ModRegistry;
+import onelemonyboi.miniutilities.blocks.cables.energy.EnergyTile;
 import onelemonyboi.miniutilities.blocks.complexblocks.solarpanels.SolarPanelControllerTile;
 import onelemonyboi.miniutilities.blocks.complexblocks.quantumquarry.QuantumQuarryTile;
 import onelemonyboi.miniutilities.blocks.complexblocks.mechanicalminer.MechanicalMinerTile;
@@ -14,7 +15,8 @@ public class TEList {
     public static final RegistryObject<TileEntityType<MechanicalMinerTile>> MechanicalMinerTile = ModRegistry.TE.register("mechanical_miner", () -> TileEntityType.Builder.create(() -> new MechanicalMinerTile(), BlockList.MechanicalMiner.get()).build(null));
     public static final RegistryObject<TileEntityType<MechanicalPlacerTile>> MechanicalPlacerTile = ModRegistry.TE.register("mechanical_placer", () -> TileEntityType.Builder.create(() -> new MechanicalPlacerTile(), BlockList.MechanicalPlacer.get()).build(null));
     public static final RegistryObject<TileEntityType<QuantumQuarryTile>> QuantumQuarryTile = ModRegistry.TE.register("quantum_quarry", () -> TileEntityType.Builder.create(() -> new QuantumQuarryTile(), BlockList.QuantumQuarry.get()).build(null));
-
     public static final RegistryObject<TileEntityType<SolarPanelControllerTile>> SolarPanelControllerTile = ModRegistry.TE.register("solar_panel_controller", () -> TileEntityType.Builder.create(() -> new SolarPanelControllerTile(), BlockList.SolarPanelController.get()).build(null));
+
+    public static final RegistryObject<TileEntityType<EnergyTile>> EnergyTile = ModRegistry.TE.register("energy_tile", () -> TileEntityType.Builder.create(() -> new EnergyTile(), BlockList.RedstoneCabling.get()).build(null));
     public static void register() {}
 }
