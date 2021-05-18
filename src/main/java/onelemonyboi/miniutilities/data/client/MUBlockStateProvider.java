@@ -1,9 +1,13 @@
 package onelemonyboi.miniutilities.data.client;
 
+import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import onelemonyboi.miniutilities.MiniUtilities;
+import onelemonyboi.miniutilities.blocks.cables.MUCableSide;
+import onelemonyboi.miniutilities.blocks.cables.energy.EnergyBlock;
 import onelemonyboi.miniutilities.init.BlockList;
 
 public class MUBlockStateProvider extends BlockStateProvider {
@@ -34,5 +38,26 @@ public class MUBlockStateProvider extends BlockStateProvider {
         simpleBlock(BlockList.MagentaLapisCaelestis.get());
         simpleBlock(BlockList.PinkLapisCaelestis.get());
         simpleBlock(BlockList.BrownLapisCaelestis.get());
+
+        registerCabling();
+    }
+
+    public void registerCabling() {
+        Block block = BlockList.RedstoneCabling.get();
+
+        String centerName = block.getRegistryName().getPath() + "_center";
+        ModelFile.ExistingModelFile center = models().getExistingFile(modLoc(centerName));
+
+        String segmentName = block.getRegistryName().getPath() + "_segment";
+        ModelFile.ExistingModelFile segment = models().getExistingFile(modLoc(segmentName));
+
+        MultiPartBlockStateBuilder multipart = getMultipartBuilder(block);
+        multipart.part().modelFile(center).addModel();
+        multipart.part().modelFile(segment).uvLock(true).addModel().condition(EnergyBlock.SOUTH, MUCableSide.PULL, MUCableSide.PUSH);
+        multipart.part().modelFile(segment).uvLock(true).rotationY(90).addModel().condition(EnergyBlock.WEST, MUCableSide.PULL, MUCableSide.PUSH);
+        multipart.part().modelFile(segment).uvLock(true).rotationY(180).addModel().condition(EnergyBlock.NORTH, MUCableSide.PULL, MUCableSide.PUSH);
+        multipart.part().modelFile(segment).uvLock(true).rotationY(270).addModel().condition(EnergyBlock.EAST, MUCableSide.PULL, MUCableSide.PUSH);
+        multipart.part().modelFile(segment).uvLock(true).rotationX(90).addModel().condition(EnergyBlock.UP, MUCableSide.PULL, MUCableSide.PUSH);
+        multipart.part().modelFile(segment).uvLock(true).rotationX(270).addModel().condition(EnergyBlock.DOWN, MUCableSide.PULL, MUCableSide.PUSH);
     }
 }

@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "minecraft:block/redstone_block",
+		"block": "minecraft:block/redstone_block"
+	},
+	"elements": [
+		{
+			"from": [6, 6, 6],
+			"to": [10, 10, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"color": 4,
+			"faces": {
+				"north": {"uv": [0, 0, 4, 4], "texture": "#block"},
+				"east": {"uv": [0, 0, 4, 4], "texture": "#block"},
+				"south": {"uv": [0, 0, 4, 4], "texture": "#block"},
+				"west": {"uv": [0, 0, 4, 4], "texture": "#block"},
+				"up": {"uv": [0, 0, 4, 4], "texture": "#block"},
+				"down": {"uv": [0, 0, 4, 4], "texture": "#block"}
+			}
+		}
+	]
+}

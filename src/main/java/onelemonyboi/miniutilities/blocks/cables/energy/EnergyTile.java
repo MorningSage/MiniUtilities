@@ -14,7 +14,7 @@ import static onelemonyboi.miniutilities.blocks.cables.energy.EnergyBlock.*;
 
 public class EnergyTile extends EnergyTileBase {
     public EnergyTile() {
-        super(TEList.EnergyTile.get(), 8192, 8192, 8192);
+        super(TEList.EnergyTile.get(), 8192, 64, 64);
     }
 
     @Override
@@ -30,10 +30,10 @@ public class EnergyTile extends EnergyTileBase {
 
     public void IOLogic(EnumProperty<MUCableSide> prop, Direction d) {
         if (getBlockState().get(prop) == MUCableSide.PULL) {
-            energy.inputFromSide(world, pos, d, 8192);
+            energy.inputFromSide(world, pos, d, 64);
         }
         else if (getBlockState().get(prop) == MUCableSide.PUSH) {
-            energy.outputToSide(world, pos, d, 8192);
+            energy.outputToSide(world, pos, d, 64);
         }
     }
 }

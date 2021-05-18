@@ -67,7 +67,7 @@ public class EnergyBlock extends Block {
 
     static VoxelShape BASE = Block.makeCuboidShape(6, 6, 6, 10, 10, 10);
     static VoxelShape NORTHSHAPE = Block.makeCuboidShape(6, 6, 0, 10, 10, 6);
-    static VoxelShape SOUTHSHAPE = Block.makeCuboidShape(10, 6, 6, 16, 10, 10);
+    static VoxelShape SOUTHSHAPE = Block.makeCuboidShape(6, 6, 10, 10, 10, 16);
     static VoxelShape EASTSHAPE = Block.makeCuboidShape(10, 6, 6, 16, 10, 10);
     static VoxelShape WESTSHAPE = Block.makeCuboidShape(0, 6, 6, 6, 10, 10);
     static VoxelShape DOWNSHAPE = Block.makeCuboidShape(6, 0, 6, 10, 6, 10);

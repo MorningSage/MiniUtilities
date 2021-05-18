@@ -1,0 +1,68 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "miniutilities:block/redstone_cabling_center"
+      }
+    },
+    {
+      "when": {
+        "south": "pull|push"
+      },
+      "apply": {
+        "model": "miniutilities:block/redstone_cabling_segment",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "west": "pull|push"
+      },
+      "apply": {
+        "model": "miniutilities:block/redstone_cabling_segment",
+        "y": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "north": "pull|push"
+      },
+      "apply": {
+        "model": "miniutilities:block/redstone_cabling_segment",
+        "y": 180,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "east": "pull|push"
+      },
+      "apply": {
+        "model": "miniutilities:block/redstone_cabling_segment",
+        "y": 270,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "up": "pull|push"
+      },
+      "apply": {
+        "model": "miniutilities:block/redstone_cabling_segment",
+        "x": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "down": "pull|push"
+      },
+      "apply": {
+        "model": "miniutilities:block/redstone_cabling_segment",
+        "x": 270,
+        "uvlock": true
+      }
+    }
+  ]
+}
