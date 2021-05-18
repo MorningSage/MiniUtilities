@@ -18,13 +18,16 @@ import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import onelemonyboi.miniutilities.MiniUtilities;
 import onelemonyboi.miniutilities.blocks.cables.MUCableSide;
 import onelemonyboi.miniutilities.init.TEList;
+import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
 
@@ -114,14 +117,27 @@ public class EnergyBlock extends Block {
             return ActionResultType.CONSUME;
         }
 
-        System.out.println(state.get(directionMap.get(hit.getFace())));
+        Triple<Long, Long, Long> triple = getRelativePositionPixels(pos, hit);
 
-        if (state.get(directionMap.get(hit.getFace())) == PUSH) {
-            worldIn.setBlockState(pos, state.with(directionMap.get(hit.getFace()), PULL));
-        } else if (state.get(directionMap.get(hit.getFace())) == PULL) {
-            worldIn.setBlockState(pos, state.with(directionMap.get(hit.getFace()), DISABLED));
-        } else if (state.get(directionMap.get(hit.getFace())).isDisconnected()) {
-            worldIn.setBlockState(pos, state.with(directionMap.get(hit.getFace()), PUSH));
+        // Why is this so long, probably can be simplified, but too lazy
+
+        if (isBetween(6, 10, triple.getLeft()) && isBetween(6, 10, triple.getMiddle()) && isBetween(0, 6, triple.getRight())) {
+            changeSideMode(state, Direction.NORTH, worldIn, pos);
+        }
+        else if (isBetween(6, 10, triple.getLeft()) && isBetween(6, 10, triple.getMiddle()) && isBetween(10, 16, triple.getRight())) {
+            changeSideMode(state, Direction.SOUTH, worldIn, pos);
+        }
+        else if (isBetween(10, 16, triple.getLeft()) && isBetween(6, 10, triple.getMiddle()) && isBetween(6, 10, triple.getRight())) {
+            changeSideMode(state, Direction.EAST, worldIn, pos);
+        }
+        else if (isBetween(0, 6, triple.getLeft()) && isBetween(6, 10, triple.getMiddle()) && isBetween(6, 10, triple.getRight())) {
+            changeSideMode(state, Direction.WEST, worldIn, pos);
+        }
+        else if (isBetween(6, 10, triple.getLeft()) && isBetween(0, 6, triple.getMiddle()) && isBetween(6, 10, triple.getRight())) {
+            changeSideMode(state, Direction.DOWN, worldIn, pos);
+        }
+        else {
+            changeSideMode(state, Direction.UP, worldIn, pos);
         }
         return ActionResultType.CONSUME;
     }
@@ -144,6 +160,32 @@ public class EnergyBlock extends Block {
         IEnergyStorage storage = opt.orElse(null);
         if (state.get(prop).canEnable() && storage != null) {
             world.setBlockState(pos, state.with(prop, MUCableSide.PUSH));
+        }
+    }
+
+    public static Triple<Double, Double, Double> getRelativePosition(BlockPos pos, BlockRayTraceResult hit) {
+        Vector3d vector = hit.getHitVec();
+        Triple<Double, Double, Double> triple = Triple.of(vector.getX() - pos.getX(), vector.getY() - pos.getY(), vector.getZ() - pos.getZ());
+        return triple;
+    }
+
+    public static Triple<Long, Long, Long> getRelativePositionPixels(BlockPos pos, BlockRayTraceResult hit) {
+        Triple<Double, Double, Double> triple = getRelativePosition(pos, hit);
+        Triple<Long, Long, Long> exitTriple = Triple.of(Math.round(triple.getLeft() * 16), Math.round(triple.getMiddle() * 16), Math.round(triple.getRight() * 16));
+        return exitTriple;
+    }
+
+    public static boolean isBetween(long low, long high, long num) {
+        return num >= low && num <= high;
+    }
+
+    public void changeSideMode(BlockState state, Direction d, World world, BlockPos pos) {
+        if (state.get(directionMap.get(d)) == PUSH) {
+            world.setBlockState(pos, state.with(directionMap.get(d), PULL));
+        } else if (state.get(directionMap.get(d)) == PULL) {
+            world.setBlockState(pos, state.with(directionMap.get(d), DISABLED));
+        } else if (state.get(directionMap.get(d)).isDisconnected()) {
+            world.setBlockState(pos, state.with(directionMap.get(d), PUSH));
         }
     }
 }
