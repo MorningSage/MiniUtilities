@@ -2,7 +2,6 @@ package onelemonyboi.miniutilities.data.client;
 
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import onelemonyboi.miniutilities.MiniUtilities;
@@ -39,12 +38,10 @@ public class MUBlockStateProvider extends BlockStateProvider {
         simpleBlock(BlockList.PinkLapisCaelestis.get());
         simpleBlock(BlockList.BrownLapisCaelestis.get());
 
-        registerCabling();
+        registerEnergyCableState(BlockList.RedstoneCabling.get());
     }
 
-    public void registerCabling() {
-        Block block = BlockList.RedstoneCabling.get();
-
+    public void registerEnergyCableState(Block block) {
         String centerName = block.getRegistryName().getPath() + "_center";
         ModelFile.ExistingModelFile center = models().getExistingFile(modLoc(centerName));
 
