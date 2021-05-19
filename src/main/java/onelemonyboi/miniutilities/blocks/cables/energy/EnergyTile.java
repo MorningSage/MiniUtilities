@@ -28,6 +28,8 @@ public class EnergyTile extends EnergyTileBase {
         }
     }
 
+    // TODO: FIX IO HOLY SHIT ITS BAD HELP PLS
+
     public void IOLogic(EnumProperty<MUCableSide> prop, Direction d) {
         if (getBlockState().get(prop) == MUCableSide.PULL) {
             energy.inputFromSide(world, pos, d, 64);
