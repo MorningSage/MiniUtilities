@@ -4,8 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -24,10 +24,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import onelemonyboi.miniutilities.MiniUtilities;
 import onelemonyboi.miniutilities.blocks.cables.MUCableSide;
 import onelemonyboi.miniutilities.init.TEList;
 import org.apache.commons.lang3.tuple.Triple;
+import onelemonyboi.lemonlib.utilities.BlockUtils;
 
 import javax.annotation.Nullable;
 
@@ -48,24 +48,19 @@ public class EnergyBlock extends Block {
     public EnergyBlock(Properties properties) {
         super(properties);
         this.setDefaultState(getDefaultState()
-                .with(UP, NONE)
-                .with(DOWN, NONE)
-                .with(NORTH, NONE)
-                .with(EAST, NONE)
-                .with(SOUTH, NONE)
-                .with(WEST, NONE));
+                .with(UP, DISABLED)
+                .with(DOWN, DISABLED)
+                .with(NORTH, DISABLED)
+                .with(EAST, DISABLED)
+                .with(SOUTH, DISABLED)
+                .with(WEST, DISABLED));
+
         directionMap.put(Direction.UP, UP);
         directionMap.put(Direction.DOWN, DOWN);
         directionMap.put(Direction.NORTH, NORTH);
         directionMap.put(Direction.EAST, EAST);
         directionMap.put(Direction.SOUTH, SOUTH);
         directionMap.put(Direction.WEST, WEST);
-    }
-
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        sideCheck(worldIn, pos, state);
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     static VoxelShape BASE = Block.makeCuboidShape(6, 6, 6, 10, 10, 10);
@@ -116,8 +111,13 @@ public class EnergyBlock extends Block {
         if (worldIn.isRemote) {
             return ActionResultType.CONSUME;
         }
+        if (Block.getBlockFromItem(player.getActiveItemStack().getItem()) instanceof EnergyBlock){
+            return ActionResultType.PASS;
+        }
 
-        Triple<Long, Long, Long> triple = getRelativePositionPixels(pos, hit);
+        // Probably can use Vector3i but too lazy
+
+        Triple<Long, Long, Long> triple = BlockUtils.getRelativePositionPixels(pos, hit);
 
         // Why is this so long, probably can be simplified, but too lazy
 
@@ -142,39 +142,6 @@ public class EnergyBlock extends Block {
         return ActionResultType.CONSUME;
     }
 
-    public void sideCheck(World worldIn, BlockPos pos, BlockState state) {
-        enableSide(UP, Direction.UP, worldIn, pos, state);
-        enableSide(DOWN, Direction.DOWN, worldIn, pos, state);
-        enableSide(NORTH, Direction.NORTH, worldIn, pos, state);
-        enableSide(EAST, Direction.EAST, worldIn, pos, state);
-        enableSide(SOUTH, Direction.SOUTH, worldIn, pos, state);
-        enableSide(WEST, Direction.WEST, worldIn, pos, state);
-    }
-
-    public void enableSide(EnumProperty<MUCableSide> prop, Direction d, World world, BlockPos pos, BlockState state) {
-        if (world.getTileEntity(pos.offset(d)) == null) {
-            world.setBlockState(pos, state.with(prop, MUCableSide.NONE));
-            return;
-        }
-        LazyOptional<IEnergyStorage> opt = world.getTileEntity(pos.offset(d)).getCapability(CapabilityEnergy.ENERGY, d.getOpposite());
-        IEnergyStorage storage = opt.orElse(null);
-        if (state.get(prop).canEnable() && storage != null) {
-            world.setBlockState(pos, state.with(prop, MUCableSide.PUSH));
-        }
-    }
-
-    public static Triple<Double, Double, Double> getRelativePosition(BlockPos pos, BlockRayTraceResult hit) {
-        Vector3d vector = hit.getHitVec();
-        Triple<Double, Double, Double> triple = Triple.of(vector.getX() - pos.getX(), vector.getY() - pos.getY(), vector.getZ() - pos.getZ());
-        return triple;
-    }
-
-    public static Triple<Long, Long, Long> getRelativePositionPixels(BlockPos pos, BlockRayTraceResult hit) {
-        Triple<Double, Double, Double> triple = getRelativePosition(pos, hit);
-        Triple<Long, Long, Long> exitTriple = Triple.of(Math.round(triple.getLeft() * 16), Math.round(triple.getMiddle() * 16), Math.round(triple.getRight() * 16));
-        return exitTriple;
-    }
-
     public static boolean isBetween(long low, long high, long num) {
         return num >= low && num <= high;
     }
@@ -182,9 +149,14 @@ public class EnergyBlock extends Block {
     public void changeSideMode(BlockState state, Direction d, World world, BlockPos pos) {
         if (state.get(directionMap.get(d)) == PUSH) {
             world.setBlockState(pos, state.with(directionMap.get(d), PULL));
-        } else if (state.get(directionMap.get(d)) == PULL) {
+        }
+        else if (state.get(directionMap.get(d)) == PULL) {
             world.setBlockState(pos, state.with(directionMap.get(d), DISABLED));
-        } else if (state.get(directionMap.get(d)).isDisconnected()) {
+        }
+        else if (state.get(directionMap.get(d)) == DISABLED) {
+            world.setBlockState(pos, state.with(directionMap.get(d), MUCableSide.BASE));
+        }
+        else if (state.get(directionMap.get(d)) == MUCableSide.BASE) {
             world.setBlockState(pos, state.with(directionMap.get(d), PUSH));
         }
     }

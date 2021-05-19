@@ -50,11 +50,11 @@ public class MUBlockStateProvider extends BlockStateProvider {
 
         MultiPartBlockStateBuilder multipart = getMultipartBuilder(block);
         multipart.part().modelFile(center).addModel();
-        multipart.part().modelFile(segment).uvLock(true).addModel().condition(EnergyBlock.SOUTH, MUCableSide.PULL, MUCableSide.PUSH);
-        multipart.part().modelFile(segment).uvLock(true).rotationY(90).addModel().condition(EnergyBlock.WEST, MUCableSide.PULL, MUCableSide.PUSH);
-        multipart.part().modelFile(segment).uvLock(true).rotationY(180).addModel().condition(EnergyBlock.NORTH, MUCableSide.PULL, MUCableSide.PUSH);
-        multipart.part().modelFile(segment).uvLock(true).rotationY(270).addModel().condition(EnergyBlock.EAST, MUCableSide.PULL, MUCableSide.PUSH);
-        multipart.part().modelFile(segment).uvLock(true).rotationX(90).addModel().condition(EnergyBlock.UP, MUCableSide.PULL, MUCableSide.PUSH);
-        multipart.part().modelFile(segment).uvLock(true).rotationX(270).addModel().condition(EnergyBlock.DOWN, MUCableSide.PULL, MUCableSide.PUSH);
+        multipart.part().modelFile(segment).uvLock(true).addModel().condition(EnergyBlock.SOUTH, MUCableSide.PULL, MUCableSide.PUSH, MUCableSide.BASE);
+        multipart.part().modelFile(segment).uvLock(true).rotationY(90).addModel().condition(EnergyBlock.WEST, MUCableSide.PULL, MUCableSide.PUSH, MUCableSide.BASE);
+        multipart.part().modelFile(segment).uvLock(true).rotationY(180).addModel().condition(EnergyBlock.NORTH, MUCableSide.PULL, MUCableSide.PUSH, MUCableSide.BASE);
+        multipart.part().modelFile(segment).uvLock(true).rotationY(270).addModel().condition(EnergyBlock.EAST, MUCableSide.PULL, MUCableSide.PUSH, MUCableSide.BASE);
+        multipart.part().modelFile(segment).uvLock(true).rotationX(90).addModel().condition(EnergyBlock.UP, MUCableSide.PULL, MUCableSide.PUSH, MUCableSide.BASE);
+        multipart.part().modelFile(segment).uvLock(true).rotationX(270).addModel().condition(EnergyBlock.DOWN, MUCableSide.PULL, MUCableSide.PUSH, MUCableSide.BASE);
     }
 }
